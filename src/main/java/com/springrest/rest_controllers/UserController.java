@@ -15,36 +15,42 @@ public class UserController {
     UserService userService;
 
     //Get
-    @RequestMapping("/")
+    @RequestMapping(method = RequestMethod.GET, value = "/")
     public ArrayList<User> getUsers() {
+
         return userService.getAllUsers();
     }
 
-    @RequestMapping("/{id}")
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     public User getById(@PathVariable(value="id")int id) {
+
         return userService.getById(id);
     }
 
-    @RequestMapping("/manual")
+    @RequestMapping(method = RequestMethod.GET, value = "/manual")
     public ArrayList<User> getUsersManually() {
+
         return userService.getAllUsersManually();
     }
 
     //Create
     @RequestMapping(method = RequestMethod.POST, value = "/")
     public User addNew(@RequestBody User user) {
+
         return userService.addNew(user);
     }
 
     //Update
     @RequestMapping(method = RequestMethod.PATCH, value = "/")
     public User updateById(@RequestBody User user) {
+
         return userService.updateById(user);
     }
 
     //Delete
     @RequestMapping(method= RequestMethod.DELETE, value="/")
-    public User deleteById(@RequestParam(value="id")int id){
-        return userService.deleteById(id);
+    public User deleteById(@RequestBody User user){
+
+        return userService.deleteById(user.getId());
     }
 }
