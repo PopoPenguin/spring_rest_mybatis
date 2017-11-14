@@ -1,7 +1,9 @@
 package com.springrest.services;
 
+import com.springrest.exceptions.InvalidRequestException;
 import com.springrest.mappers.UserMapper;
 import com.springrest.model.User;
+import org.apache.ibatis.binding.BindingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +32,10 @@ public class UserService {
     }
 
     //get user by id
-    public User getById(int id){
+    public User getById(int id) throws InvalidRequestException {
+        if (userMapper.getByID(id) == null) {
+            throw new InvalidRequestException("ID does not exist", 400);
+        }
         return userMapper.getByID(id);
     }
 
@@ -89,15 +94,46 @@ public class UserService {
     }
 
     //add new user
-    public User addNew(User user) {
+    public User addNew(User user) throws InvalidRequestException{
+        try {
+            int tempId = userMapper.checkUserExist(user.getFirst_name(), user.getLast_name());
+
+            if (tempId != 0) {
+                throw new InvalidRequestException("User Exists", 400);
+            }
+
+        }
+        catch (BindingException be) {}
+        catch(InvalidRequestException e) {
+            throw new InvalidRequestException("User Exists", 400);
+        }
+
         userMapper.insertUser(user);
-        return userMapper.getByName(user.getFirst_name());
+
+        return userMapper.getByName(user.getFirst_name(), user.getLast_name());
+
     }
 
+
+
+
     //update user by its id
-    public User updateById(User user) {
+    public User updateById(User user) throws InvalidRequestException {
+        try {
+            User tempUser = userMapper.getByID(user.getId());
+            if (tempUser==null){
+                throw new InvalidRequestException("User ID does not exist", 500);
+            }
+
+        }
+        catch (InvalidRequestException ie){
+            throw new InvalidRequestException("User does not exist", 500);
+
+        }
+
         userMapper.updateUser(user);
-        return userMapper.getByName(user.getFirst_name());
+
+        return userMapper.getByName(user.getFirst_name(), user.getLast_name());
     }
 
     //delete
@@ -105,4 +141,7 @@ public class UserService {
         userMapper.deleteUser(id);
         return userMapper.getByID(id);
     }
+
+    //check if first_name last_name exists
+
 }

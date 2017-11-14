@@ -4,6 +4,7 @@ package com.springrest.services;
 created by PopoPenguin on 11/3/17
 */
 
+import com.springrest.exceptions.InvalidRequestException;
 import com.springrest.mappers.NYTMapper;
 import com.springrest.model.nyt.NYTMultimedia;
 import com.springrest.model.nyt.NYTResults;
@@ -69,5 +70,18 @@ public class NYTService {
         } else {
             return nytMapper.getAllStories();
         }
+    }
+
+    public ArrayList<NYTResults> getNYTResultsBySection (String section) throws InvalidRequestException {
+
+
+        try{
+            int tempId = nytMapper.checkSectionExists(section);
+        }catch (Exception npe){
+            throw new InvalidRequestException("Unknown section: " + section, 400);
+        }
+
+        return nytMapper.searchBySection(section);
+
     }
 }

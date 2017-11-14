@@ -31,15 +31,15 @@ public class GoTQuoteService {
     }
 
     //add new quote
-    public GoTQuote addNew(GoTQuote goTQuote) {
-        goTMapper.insertQuote(goTQuote);
-        return goTMapper.getByCharacter(goTQuote.getQuote());
+    public GoTQuote addNew(GoTQuote gotQuote) {
+        insertGoTQuote(gotQuote);
+        return goTMapper.getByID(gotQuote.getId());
     }
 
     //update user by its id
-    public GoTQuote updateById(GoTQuote goTQuote) {
-        goTMapper.updateQuote(goTQuote);
-        return goTMapper.getByCharacter(goTQuote.getQuote());
+    public GoTQuote updateById(GoTQuote gotQuote) {
+        goTMapper.updateQuote(gotQuote);
+        return goTMapper.getByID(gotQuote.getId());
     }
 
     //delete
